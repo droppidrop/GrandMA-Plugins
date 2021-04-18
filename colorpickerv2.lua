@@ -1,3 +1,5 @@
+--DEV VERSION
+
 local getHandle = gma.show.getobj.handle
 local subImg
 local fillSubImg
@@ -36,10 +38,10 @@ end
 function input()
 	local preNum = {}
 	local preName = {}
-	local following = tonumber(gma.textinput('Images and colours in order? (1/0?'))
-	local startSeq = tonumber(gma.textinput('Enter starting sequence here'))
-	local startImg = tonumber(gma.textinput('Enter starting image here'))
-	local clrAmt = tonumber(gma.textinput('Enter the amount of colours here'))
+	local following = 1 --tonumber(gma.textinput('Images and colours in order? (1/0?'))
+	local startSeq = 200 --tonumber(gma.textinput('Enter starting sequence here'))
+	local startImg = 200 --tonumber(gma.textinput('Enter starting image here'))
+	local clrAmt = 12 --tonumber(gma.textinput('Enter the amount of colours here'))
 	
 --COLOURS
 	if following == 0 then
@@ -49,7 +51,7 @@ function input()
 			preName[a] = getLabel('Preset 4.' ..pre) 
 		end
 	else 
-		local pre = tonumber(gma.textinput('Enter first colour here'))
+		local pre = 1 --tonumber(gma.textinput('Enter first colour here'))
 		for i = 1, clrAmt, 1 do
 			preNum[i] = pre
 			preName[i] = getLabel('Preset 4.' ..pre)
@@ -68,13 +70,13 @@ function input()
 			fillImg[e] = fillSubImg
 		end
 	else 
-		subImg = tonumber(gma.textinput('Enter first unfilled image here'))
+		subImg = 24 --tonumber(gma.textinput('Enter first unfilled image here'))
 		for i = 1, clrAmt, 1 do
 			preSubImg = subImg
 			unfillImg[i] = preSubImg
 			preSubImg = preSubImg + 1
 		end
-		fillSubImg = tonumber(gma.textinput('Enter first filled image here'))
+		fillSubImg = 47 --tonumber(gma.textinput('Enter first filled image here'))
 		for i = 1, clrAmt, 1 do
 			fillImg[i] = fillSubImg
 			fillSubimg = fillSubImg + 1
@@ -84,7 +86,7 @@ function input()
 --GROUPS
 	local grpNum = {}
 	local grpName = {}
-	local grpAmt = tonumber(gma.textinput('Enter amount of groups here'))
+	local grpAmt = 6 --tonumber(gma.textinput('Enter amount of groups here'))
 	for b = 1, grpAmt, 1 do
 		local grp = tonumber(gma.textinput('Enter group ' ..b.. ' here, only numerical')) --get label for group
 		grpNum[b] = grp
@@ -145,41 +147,45 @@ function createMacros(grpAmt, clrAmt, subStartSeq, startImg)
 	local startMacro = tonumber(gma.textinput('Enter first macro here'))
 	local grp = 0
 	local pre = 1
-	local subSubfillSubImg = fillSubImg
+	local subSubFillSubImg = fillSubImg
+	local subStartMacro = startMacro -1
 	local subFillSubgImg = fillSubImg
-	local subStartImg = StartImg
+	local subStartImg = startImg
 	for i = 1, grpAmt do
 		grp = grp + 1
 		pre = 1
-		
-		if gpr == 1 then
-			macStore(startMacro, grp, pre)
-			macLine(startMacro, 1, 'Go Sequence ' .. subStartSeq)
-			local p = 2
-			local sGrpAmt  = grpAmt * grpAmt
-			for i = 1, sGrpAmt do
-				sGrp = grp
-				macLine(startMacro, p, 'Copy $Empty At $Grp' ..sGrp.. ' /m')
-				sGrp = sGrp + clrAmt
-				p = p + 1
-				macLine(startMacro, p 'Copy Image ' ..subSubFillSubImg.. ' At ' ..subStartImg .. ' /o')
-				subSubFillSubImg = subSubFillSubImg + 12
-				subStartImg = subStartImg + 12
-				p = p + 1
-				
-			end 
-		else
-			subFillSubImg = fillSubImg
-				for i = 1, clrAmt do
+		subFillSubImg = fillSubImg
+		if grp == 1 then
+			for r = 1, clrAmt do
 				macStore(startMacro, grp, pre)
 				macLine(startMacro, 1, 'Go Sequence ' ..subStartSeq)
-				macLine(startMacro, 2, 'Copy $Empty At $Grp' ..grp.. ' /m')
+				local restGrps = " "
+				for r = 1, grpAmt do
+					if r <= grpAmt - 1 then
+						restGrps = restGrps .. '$Grp' ..r.. ' + '
+					else
+						restGrps = restGrps .. ' $Grp' ..r
+					end
+				end
+				macLine(startMacro, 2, 'Copy $Empty at ' ..restGrps.. ' /m')
 				macLine(startMacro, 3, 'Copy Image ' ..subFillSubImg.. ' At ' ..startImg.. ' /o')
-		subStartSeq = subStartSeq + 1
-		startMacro = startMacro + 1
-		pre = pre + 1
-		startImg = startImg + 1
-		subFillSubImg = subFillSubImg + 1
+				subStartSeq = subStartSeq + 1
+				startMacro = startMacro + 1
+				pre = pre + 1
+				startImg = startImg + 1
+				subFillSubImg = subFillSubImg + 1
+			end
+		else
+			for e = 1, clrAmt do
+			macStore(startMacro, grp, pre)
+			macLine(startMacro, 1, 'Go Sequence ' ..subStartSeq)
+			macLine(startMacro, 2, 'Copy $Empty At $Grp' ..grp.. ' /m')
+			macLine(startMacro, 3, 'Copy Image ' ..subFillSubImg.. ' At ' ..startImg.. ' /o')
+			subStartSeq = subStartSeq + 1
+			startMacro = startMacro + 1
+			pre = pre + 1
+			startImg = startImg + 1
+			subFillSubImg = subFillSubImg + 1
 			end
 		end
 	end
