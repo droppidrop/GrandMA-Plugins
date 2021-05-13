@@ -39,8 +39,8 @@ function input()
 	local preNum = {}
 	local preName = {}
 	local following = 1 --tonumber(gma.textinput('Images and colours in order? (1/0?'))
-	local startSeq = 200 --tonumber(gma.textinput('Enter starting sequence here'))
-	local startImg = 200 --tonumber(gma.textinput('Enter starting image here'))
+	local startSeq = 201 --tonumber(gma.textinput('Enter starting sequence here'))
+	local startImg = 201 --tonumber(gma.textinput('Enter starting image here'))
 	local clrAmt = 12 --tonumber(gma.textinput('Enter the amount of colours here'))
 	
 --COLOURS
@@ -127,9 +127,9 @@ function createSequences(preNum, preName, grpNum, grpName, clrAmt, grpAmt, subSt
 	emptyImgString = emptyImgString .. '"'
 	gma.cmd(emptyImgString)
 	for i = 1, grpAmt, 1 do
-		local varString = "SetVar $Grp" .. i .. ' = "Image '
+		local varString = 'SetVar $Grp' .. i .. ' = ' .. '"'
 		for j = 1, clrAmt, 1 do
-			if j < 12 then
+			if j < clrAmt then
 				varString = varString .. varStartImg .. " + "
 			else 
 				varString = varString .. varStartImg
@@ -144,7 +144,7 @@ end
 
 --MACROS
 function createMacros(grpAmt, clrAmt, subStartSeq, startImg)
-	local startMacro = tonumber(gma.textinput('Enter first macro here'))
+	local startMacro = 201 --tonumber(gma.textinput('Enter first macro here'))
 	local grp = 0
 	local pre = 1
 	local subSubFillSubImg = fillSubImg
@@ -160,15 +160,14 @@ function createMacros(grpAmt, clrAmt, subStartSeq, startImg)
 				macStore(startMacro, grp, pre)
 				macLine(startMacro, 1, 'Go Sequence ' ..subStartSeq)
 				local restGrps = " "
+				local varLine = 2
+				local varNumber = 1
 				for r = 1, grpAmt do
-					if r <= grpAmt - 1 then
-						restGrps = restGrps .. '$Grp' ..r.. ' + '
-					else
-						restGrps = restGrps .. ' $Grp' ..r
-					end
+					macLine(startMacro, varLine, 'Copy $Empty at Image $Grp' ..varNumber.. ' /m')
+					varLine = varLine + 1
+					varNumber = varNumber + 1
 				end
-				macLine(startMacro, 2, 'Copy $Empty at ' ..restGrps.. ' /m')
-				macLine(startMacro, 3, 'Copy Image ' ..subFillSubImg.. ' At ' ..startImg.. ' /o')
+				macLine(startMacro, varLine, 'Copy Image ' ..subFillSubImg.. ' At ' ..startImg.. ' /o')
 				subStartSeq = subStartSeq + 1
 				startMacro = startMacro + 1
 				pre = pre + 1
@@ -179,7 +178,7 @@ function createMacros(grpAmt, clrAmt, subStartSeq, startImg)
 			for e = 1, clrAmt do
 			macStore(startMacro, grp, pre)
 			macLine(startMacro, 1, 'Go Sequence ' ..subStartSeq)
-			macLine(startMacro, 2, 'Copy $Empty At $Grp' ..grp.. ' /m')
+			macLine(startMacro, 2, 'Copy $Empty At Image $Grp' ..grp.. ' /m')
 			macLine(startMacro, 3, 'Copy Image ' ..subFillSubImg.. ' At ' ..startImg.. ' /o')
 			subStartSeq = subStartSeq + 1
 			startMacro = startMacro + 1
