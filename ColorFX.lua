@@ -7,6 +7,7 @@ local startMacro
 local grp
 local startFX
 local colLabel = {}
+local endFX
 
 function macLine(macroNum, lineNum, command)
     gma.cmd('Store Macro 1.'..macroNum..'.'..lineNum)
@@ -24,8 +25,10 @@ function main()
     grp = 1 --tonumer(gma.textinput('Enter your first group here'))
     startMacro = 11 --tonumber(gma.textinput('Enter your starting macro here'))
     startFX = 1 --tonumbber(gma.textinput('Enter your first effect here'))
+    endFX = startFX + grpAmt
     getLabels()
 end
+
 
 function getLabels()
     local col = 1
@@ -139,11 +142,10 @@ function createFX()
     gma.cmd('Assign Attribute COLORMIXER At Effect 1.' ..fx.. '.9 /m')
     fx = fx + 1
     end
-
     waveform()
 end
 
---TODO Waveform, wings, direction, groups, blocks
+--TODO , wings, direction, groups, blocks
 
 function waveform()
     local formAmount = 15
@@ -151,15 +153,63 @@ function waveform()
         gma.cmd('Store Cue ' ..p.. ' Executor 1.' ..exec)
         gma.cmd('Label Executor 1.' ..exec.. '"waveform"')
     end
-    local endFX = startFX + grpAmt
     local forms = {3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
     local formString = {'Random', 'Pwm', 'Chase', 'Sin', 'Cos', 'Ramp+', 'Ramp-', 'Ramp', 'Phase 1', 'Phase 2', 'Phase 3', 'Bump 16', 'Swing 17', 'Ramp 50', 'Circle'}
     for i = 1, formAmount, 1 do
         gma.cmd('Assign Cue ' ..i.. '/cmd="Assign Form ' ..forms[i].. ' At Effect ' ..startFX.. ' Thru ' ..endFX.. '" /m Executor 1.' ..exec)
         gma.cmd('Label Cue ' ..i.. ' Executor 1.' ..exec.. ' "' ..formString[i].. '"')
     end
-
+    exec = exec + 1
     --Random 3, Pwm 4, Chase 5, Sin 8, Cos 9, Ramp+ 10, Ramp- 11, Ramp 12, Phase 1 13, Phase 2 14, Phase 3 15, Bump 16, Swing 17, Ramp 50 18, Circle 19
+    wings()
+end
+
+function wings()
+    for i = 0, 5, 1 do
+        b = i + 1
+        gma.cmd('Store Cue ' ..b.. ' Executor 1.' ..exec)
+        gma.cmd('Assign Cue ' ..b.. ' Executor 1.' ..exec.. '/cmd="Assign Effect ' ..startFX.. ' Thru ' ..endFX.. ' /wings='..i..'"')
+        gma.cmd('Label Cue ' ..b.. ' Executor 1.' ..exec.. ' "'..i.. '"')
+    end
+    gma.cmd('Label Executor 1.' ..exec.. '"wings"')
+    exec = exec + 1
+    direction()
+end
+
+function direction()
+    dirArray = {'>', '<', '>bounce', '<bounce'}
+    for i = 1, 4, 1 do
+        gma.cmd('Store Cue ' ..i.. ' Executor 1.' ..exec)
+        gma.cmd('Assign Cue ' ..i.. ' Executor 1.' ..exec.. '/cmd="Assign Effect ' ..startFX.. ' Thru ' ..endFX.. '/dir='..dirArray[i].. '"')
+        gma.cmd('Label Cue ' ..i.. ' Executor 1.' ..exec.. ' "' ..dirArray[i].. '"')
+    end
+    gma.cmd('Label Executor 1. ' ..exec.. '"direction"')
+    exec = exec + 1
+    groups()
+end
+
+function groups()
+    for i = 0, 7, 1 do
+        b = i + 1
+        gma.cmd('Store Cue ' ..b.. ' Executor 1.' ..exec)
+        gma.cmd('Assign Cue ' ..b.. ' Executor 1.' ..exec.. '/cmd="Assign Effect ' ..startFX.. ' Thru ' ..endFX.. '/groups='..i.. '"')
+        gma.cmd('Label Cue ' ..b.. ' Executor 1.' ..exec.. ' "' ..i.. '"')
+    end
+    gma.cmd('Label Executor 1. ' ..exec.. '"groups"')
+    exec = exec + 1
+    blocks()
+end
+
+function blocks()
+    for i = 0, 7, 1 do
+        b = i + 1
+        gma.cmd('Store Cue ' ..b.. ' Executor 1.' ..exec)
+        gma.cmd('Assign Cue ' ..b.. ' Executor 1.' ..exec.. '/cmd="Assign Effect ' ..startFX.. ' Thru ' ..endFX.. '/blocks=' ..i.. '"')
+        gma.cmd('Label Cue ' ..b.. ' Executor 1.' ..exec.. ' "' ..i.. '"')
+    end
+    gma.cmd('Label Executor 1. ' ..exec.. '"blocks"')
+    exec = exec + 1
+
 end
 
 return main
