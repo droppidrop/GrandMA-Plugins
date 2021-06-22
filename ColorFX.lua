@@ -1,4 +1,4 @@
---DEV VERSION
+
 
 local clrAmt
 local exec
@@ -19,12 +19,12 @@ function macStore(macroNum)
 end
 
 function main()
-    clrAmt = 12 --tonumber(gma.textinput('Enter the amount of colours here'))
-    exec = 101 --tonumber(gma.textinput('Enter the first executor here')) --First executor the cues should be made, will automatically append 1.
-    grpAmt = 6 --tonumber(gma.textinput('Enter the amount of groups here,they have to be in order'))
-    grp = 1 --tonumer(gma.textinput('Enter your first group here'))
-    startMacro = 11 --tonumber(gma.textinput('Enter your starting macro here'))
-    startFX = 1 --tonumbber(gma.textinput('Enter your first effect here'))
+    clrAmt = tonumber(gma.textinput('Enter the amount of colours here'))
+    exec = tonumber(gma.textinput('Enter the first executor here')) --First executor the cues should be made, will automatically append 1.
+    grpAmt = tonumber(gma.textinput('Enter the amount of groups here,they have to be in order'))
+    grp = tonumer(gma.textinput('Enter your first group here'))
+    startMacro = tonumber(gma.textinput('Enter your starting macro here'))
+    startFX = tonumbber(gma.textinput('Enter your first effect here'))
     endFX = startFX + grpAmt
     getLabels()
 end

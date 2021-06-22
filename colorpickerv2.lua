@@ -1,4 +1,4 @@
---DEV VERSION
+
 
 local getHandle = gma.show.getobj.handle
 local subImg
@@ -38,10 +38,10 @@ end
 function input()
 	local preNum = {}
 	local preName = {}
-	local following = 1 --tonumber(gma.textinput('Images and colours in order? (1/0?'))
-	local startSeq = 201 --tonumber(gma.textinput('Enter starting sequence here'))
-	local startImg = 201 --tonumber(gma.textinput('Enter starting image here'))
-	local clrAmt = 12 --tonumber(gma.textinput('Enter the amount of colours here'))
+	local following = tonumber(gma.textinput('Images and colours in order? (1/0?'))
+	local startSeq = tonumber(gma.textinput('Enter starting sequence here'))
+	local startImg = tonumber(gma.textinput('Enter starting image here'))
+	local clrAmt = tonumber(gma.textinput('Enter the amount of colours here'))
 	
 --COLOURS
 	if following == 0 then
@@ -51,7 +51,7 @@ function input()
 			preName[a] = getLabel('Preset 4.' ..pre) 
 		end
 	else 
-		local pre = 1 --tonumber(gma.textinput('Enter first colour here'))
+		local pre = tonumber(gma.textinput('Enter first colour here'))
 		for i = 1, clrAmt, 1 do
 			preNum[i] = pre
 			preName[i] = getLabel('Preset 4.' ..pre)
@@ -70,13 +70,13 @@ function input()
 			fillImg[e] = fillSubImg
 		end
 	else 
-		subImg = 24 --tonumber(gma.textinput('Enter first unfilled image here'))
+		subImg = tonumber(gma.textinput('Enter first unfilled image here'))
 		for i = 1, clrAmt, 1 do
 			preSubImg = subImg
 			unfillImg[i] = preSubImg
 			preSubImg = preSubImg + 1
 		end
-		fillSubImg = 47 --tonumber(gma.textinput('Enter first filled image here'))
+		fillSubImg = tonumber(gma.textinput('Enter first filled image here'))
 		for i = 1, clrAmt, 1 do
 			fillImg[i] = fillSubImg
 			fillSubimg = fillSubImg + 1
@@ -86,7 +86,7 @@ function input()
 --GROUPS
 	local grpNum = {}
 	local grpName = {}
-	local grpAmt = 6 --tonumber(gma.textinput('Enter amount of groups here'))
+	local grpAmt = tonumber(gma.textinput('Enter amount of groups here'))
 	for b = 1, grpAmt, 1 do
 		local grp = tonumber(gma.textinput('Enter group ' ..b.. ' here, only numerical')) --get label for group
 		grpNum[b] = grp
@@ -144,7 +144,7 @@ end
 
 --MACROS
 function createMacros(grpAmt, clrAmt, subStartSeq, startImg)
-	local startMacro = 201 --tonumber(gma.textinput('Enter first macro here'))
+	local startMacro = tonumber(gma.textinput('Enter first macro here'))
 	local grp = 0
 	local pre = 1
 	local subSubFillSubImg = fillSubImg
